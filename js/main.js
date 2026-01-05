@@ -174,20 +174,29 @@ function goToPage(page) {
 
 // Load article detail page
 function loadArticlePage() {
-    const pathname = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
     let article = null;
     
-    // Try to get article by slug from URL path (e.g., /article/the-future-of-healthy-eating-is-here-flexpro)
-    if (pathname.includes('/article/')) {
-        const slug = pathname.split('/article/')[1];
-        if (slug) {
-            article = blogArticles.find(a => a.slug === slug);
+    // First, try to get article by slug from query parameter (e.g., ?slug=the-future-of-healthy-eating-is-here-flexpro)
+    const slug = urlParams.get('slug');
+    if (slug) {
+        article = blogArticles.find(a => a.slug === slug);
+    }
+    
+    // Fallback: try to get article by slug from URL path (e.g., /article/the-future-of-healthy-eating-is-here-flexpro)
+    // This works when server has URL rewriting configured
+    if (!article) {
+        const pathname = window.location.pathname;
+        if (pathname.includes('/article/')) {
+            const pathSlug = pathname.split('/article/')[1];
+            if (pathSlug) {
+                article = blogArticles.find(a => a.slug === pathSlug);
+            }
         }
     }
     
     // Fallback: try to get article by ID from query parameter (e.g., ?id=7)
     if (!article) {
-        const urlParams = new URLSearchParams(window.location.search);
         const articleId = parseInt(urlParams.get('id'));
         if (articleId) {
             article = blogArticles.find(a => a.id === articleId);
@@ -314,7 +323,8 @@ function displayCategoryArticles(articles, categoryName) {
 function navigateToArticle(articleId) {
     const article = blogArticles.find(a => a.id === articleId);
     if (article && article.slug) {
-        window.location.href = `article/${article.slug}`;
+        // Use query parameter format for better compatibility (works with local files and servers)
+        window.location.href = `article.html?slug=${article.slug}`;
     } else {
         // Fallback to ID if slug not available
         window.location.href = `article.html?id=${articleId}`;
