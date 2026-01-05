@@ -15,14 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
 // Initialize page based on current page
 function initializePage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const pathname = window.location.pathname;
     
-    if (currentPage === 'index.html' || currentPage === '') {
-        loadHomePage();
-    } else if (currentPage === 'article.html') {
+    // Check if we're on article page (supports both /article and /article.html)
+    if (currentPage === 'article.html' || pathname.includes('/article')) {
         loadArticlePage();
-    } else if (currentPage === 'category.html') {
+    } else if (currentPage === 'index.html' || currentPage === '') {
+        loadHomePage();
+    } else if (currentPage === 'category.html' || pathname.includes('/category')) {
         loadCategoryPage();
-    } else if (currentPage === 'search.html') {
+    } else if (currentPage === 'search.html' || pathname.includes('/search')) {
         // Search page handles its own initialization
     } else if (currentPage === 'about.html' || currentPage === 'contact.html' || currentPage === 'privacy.html' || currentPage === 'terms.html') {
         // Static pages, no special initialization needed
