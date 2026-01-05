@@ -456,6 +456,7 @@ const blogArticles = [
     {
         id: 7,
         title: "The Future of Healthy Eating is Here: FlexPro",
+        slug: "the-future-of-healthy-eating-is-here-flexpro",
         category: "food",
         categoryName: "Food & Beverage",
         date: "2025-12-03",

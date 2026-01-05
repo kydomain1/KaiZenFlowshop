@@ -17,7 +17,7 @@ function initializePage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const pathname = window.location.pathname;
     
-    // Check if we're on article page (supports both /article and /article.html)
+    // Check if we're on article page (supports /article, /article.html, and /article/slug)
     if (currentPage === 'article.html' || pathname.includes('/article')) {
         loadArticlePage();
     } else if (currentPage === 'index.html' || currentPage === '') {
@@ -174,15 +174,26 @@ function goToPage(page) {
 
 // Load article detail page
 function loadArticlePage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const articleId = parseInt(urlParams.get('id'));
+    const pathname = window.location.pathname;
+    let article = null;
     
-    if (!articleId) {
-        window.location.href = 'index.html';
-        return;
+    // Try to get article by slug from URL path (e.g., /article/the-future-of-healthy-eating-is-here-flexpro)
+    if (pathname.includes('/article/')) {
+        const slug = pathname.split('/article/')[1];
+        if (slug) {
+            article = blogArticles.find(a => a.slug === slug);
+        }
     }
     
-    const article = blogArticles.find(a => a.id === articleId);
+    // Fallback: try to get article by ID from query parameter (e.g., ?id=7)
+    if (!article) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = parseInt(urlParams.get('id'));
+        if (articleId) {
+            article = blogArticles.find(a => a.id === articleId);
+        }
+    }
+    
     if (!article) {
         window.location.href = 'index.html';
         return;
@@ -301,7 +312,13 @@ function displayCategoryArticles(articles, categoryName) {
 
 // Navigate to article
 function navigateToArticle(articleId) {
-    window.location.href = `article.html?id=${articleId}`;
+    const article = blogArticles.find(a => a.id === articleId);
+    if (article && article.slug) {
+        window.location.href = `article/${article.slug}`;
+    } else {
+        // Fallback to ID if slug not available
+        window.location.href = `article.html?id=${articleId}`;
+    }
 }
 
 // Perform search - redirects to search page
