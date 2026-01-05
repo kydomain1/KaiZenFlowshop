@@ -458,7 +458,7 @@ const blogArticles = [
         title: "The Future of Healthy Eating is Here: FlexPro",
         category: "food",
         categoryName: "Food & Beverage",
-        date: "2024-12-03",
+        date: "2025-12-03",
         featured: true,
         image: "image/头图.png",
         excerpt: "Discover how FlexPro is revolutionizing meal delivery with nutritious, chef-prepared meals that fit your lifestyle. Experience the convenience of healthy eating without compromise.",
