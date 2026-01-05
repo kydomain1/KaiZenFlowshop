@@ -2,6 +2,12 @@
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Debug: Check if blogArticles is loaded
+    if (typeof blogArticles === 'undefined') {
+        console.error('blogArticles is not defined! Check if js/data.js is loaded correctly.');
+    } else {
+        console.log('blogArticles loaded successfully. Total articles:', blogArticles.length);
+    }
     initializePage();
     setupEventListeners();
 });
